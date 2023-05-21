@@ -164,6 +164,9 @@ for(let i = 0; i < data.features.length; i++){
 names.sort()
 let htmlString = ""
 for(let i = 0; i < names.length; i++){
-    htmlString += `<li>${names[i]}</option>`
+    htmlString += `<li><label for="myCheckbox${i}">
+    <input type="checkbox" id="myCheckbox${i}">
+    ${names[i]}
+  </label></li>`
 }
 document.getElementById("list").innerHTML = htmlString
