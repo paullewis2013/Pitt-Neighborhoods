@@ -5,3 +5,4 @@ TODO:
 [x] load neighborhood data
 [ ] make neighborhoods clickable
 [ ] add list of neighboorhoods
+[ ] prevent map moving from center

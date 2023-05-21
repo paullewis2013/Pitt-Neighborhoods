@@ -1,5 +1,13 @@
 // Create the map
-var map = L.map('map').setView([40.4406, -79.9959], 12); // Set the initial center and zoom level
+var map = L.map('map', {
+    dragging: false, // Disable dragging
+    scrollWheelZoom: false, // Disable zooming with the scroll wheel
+    doubleClickZoom: false, // Disable zooming on double click
+    touchZoom: false, // Disable zooming with touch gestures
+    boxZoom: false, // Disable zooming with shift-click and drag
+    keyboard: false, // Disable keyboard navigation
+    zoomControl: false // Disable default zoom control
+}).setView([40.43, -79.99], 11.5); // Set the initial center and zoom level
 
 var data = {
     "type": "FeatureCollection",
