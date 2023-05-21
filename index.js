@@ -9,6 +9,7 @@ var map = L.map('map', {
     zoomControl: false // Disable default zoom control
 }).setView([40.43, -79.99], 11.5); // Set the initial center and zoom level
 
+// collapse me :)
 var data = {
     "type": "FeatureCollection",
     "name": "Neighborhoods_",
@@ -108,10 +109,61 @@ var data = {
 };
 
 // Add the basemap layer (e.g., OpenStreetMap)
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-    maxZoom: 18
+
+// satellite
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, Imagery &copy; <a href="https://www.esri.com/">Esri</a>',
+    maxZoom: 18,
 }).addTo(map);
 
-// Create a Leaflet GeoJSON layer and add it to the map
-L.geoJSON(data).addTo(map);
+// tonor
+// L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.{ext}', {
+//     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, Tiles by <a href="http://stamen.com">Stamen</a>',
+//     subdomains: 'abcd',
+//     minZoom: 1,
+//     maxZoom: 16,
+//     ext: 'png',
+// }).addTo(map);
+
+// Create a Leaflet GeoJSON layer
+var geojsonLayer = L.geoJSON(data, {
+    onEachFeature: function(feature, layer) {
+        layer.on({
+            mouseover: handleMouseOver,
+            mouseout: handleMouseOut
+        });
+        layer.bindTooltip(feature.properties.hood);
+    }
+}).addTo(map);
+
+// Event handler for mouseover
+function handleMouseOver(e) {
+    var layer = e.target;
+    console.log(layer.feature.properties.hood); // Display feature properties in the console
+}
+
+// Event handler for mouseout
+function handleMouseOut(e) {
+    // Clear the console or perform any other actions if needed
+    // console.clear();
+}
+
+// Attach event handlers to each GeoJSON feature layer
+geojsonLayer.eachLayer(function(layer) {
+    layer.on({
+        mouseover: handleMouseOver,
+        mouseout: handleMouseOut
+    });
+});
+
+let names = []
+//loop through all neighborhoods 
+for(let i = 0; i < data.features.length; i++){
+    names.push(data.features[i].properties.hood)
+}
+names.sort()
+let htmlString = ""
+for(let i = 0; i < names.length; i++){
+    htmlString += `<li>${names[i]}</option>`
+}
+document.getElementById("list").innerHTML = htmlString
