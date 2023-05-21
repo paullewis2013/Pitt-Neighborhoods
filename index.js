@@ -130,7 +130,8 @@ var geojsonLayer = L.geoJSON(data, {
     onEachFeature: function(feature, layer) {
         layer.on({
             mouseover: handleMouseOver,
-            mouseout: handleMouseOut
+            mouseout: handleMouseOut,
+            mousedown: handleMouseDown
         });
         layer.bindTooltip(feature.properties.hood);
     }
@@ -139,13 +140,28 @@ var geojsonLayer = L.geoJSON(data, {
 // Event handler for mouseover
 function handleMouseOver(e) {
     var layer = e.target;
-    console.log(layer.feature.properties.hood); // Display feature properties in the console
+    // console.log(layer.feature.properties.hood); // Display feature properties in the console
 }
 
 // Event handler for mouseout
 function handleMouseOut(e) {
     // Clear the console or perform any other actions if needed
     // console.clear();
+}
+
+// Event handler for mouseout
+function handleMouseDown(e) {
+    var layer = e.target;
+    let name = layer.feature.properties.hood; // Display feature properties in the console
+    let index = names.findIndex(x => x.name.trim() == name.trim())
+    let checkbox = document.getElementById(`myCheckbox${index}`)
+
+    if(checkbox.checked){
+        checkbox.checked = false
+    }else{
+        checkbox.checked = true
+    }
+    toggleLabelStrikeThrough(checkbox)
 }
 
 // Attach event handlers to each GeoJSON feature layer
@@ -198,5 +214,36 @@ function toggleLabelStrikeThrough(checkbox){
             names[i].visited = checkbox.checked
         }
     }
-    console.log(names)
+    var feature = getFeatureByProperty(geojsonLayer, 'hood', label.textContent.trim())
+
+    if (feature) {
+        // Found a feature with the specified property value
+        console.log(feature.feature);
+
+        if(checkbox.checked){
+            feature.setStyle({
+                fillColor: '#00aa00',
+                fillOpacity: 0.9
+            });
+        } else {
+            feature.setStyle({
+                fillColor: null,
+                fillOpacity: 0.2
+            });
+        }
+
+    } else {
+        // Feature not found
+        console.log('Feature not found');
+    }
+}
+  
+function getFeatureByProperty(layer, property, value) {
+    var foundFeature = null;
+    layer.eachLayer(function (layer) {
+        if (layer.feature.properties[property] === value) {
+            foundFeature = layer;
+        }
+    });
+    return foundFeature;
 }
