@@ -36,3 +36,15 @@ li {
 label {
     margin: 0;
 }
+.strike-through {
+    text-decoration: line-through;
+}
+h1 {
+    margin: 20px;
+    padding: 10px 50px;
+    font-size: 1.5em;
+    font-weight: 400;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}

@@ -9,6 +9,6 @@ TODO:
 - [ ] make map style changeable (toner vs satellite)
 - [x] show name of neighborhood on hover
 - [ ] change visited neighborhoods to solid green
-- [ ] strikethrough visited neighborhoods in list
+- [x] strikethrough visited neighborhoods in list
 - [x] set up github pages for site
 - [ ] fill in rest of non list and title space with map

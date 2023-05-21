@@ -159,14 +159,44 @@ geojsonLayer.eachLayer(function(layer) {
 let names = []
 //loop through all neighborhoods 
 for(let i = 0; i < data.features.length; i++){
-    names.push(data.features[i].properties.hood)
+    names.push({
+        name: data.features[i].properties.hood,
+        visited: false
+    })
 }
-names.sort()
+names.sort((a, b) => {
+    const nameA = a.name.toUpperCase(); // Convert names to uppercase for case-insensitive sorting
+    const nameB = b.name.toUpperCase();
+    if (nameA < nameB) {
+        return -1; // a should come before b
+    }
+    if (nameA > nameB) {
+        return 1; // b should come before a
+    }
+    return 0; // names are equal, maintain original order
+});
+
 let htmlString = ""
 for(let i = 0; i < names.length; i++){
     htmlString += `<li><label for="myCheckbox${i}">
-    <input type="checkbox" id="myCheckbox${i}">
-    ${names[i]}
+    <input type="checkbox" id="myCheckbox${i}" onchange="toggleLabelStrikeThrough(this)">
+    ${names[i].name}
   </label></li>`
 }
 document.getElementById("list").innerHTML = htmlString
+
+function toggleLabelStrikeThrough(checkbox){
+    var label = checkbox.parentNode;
+    if (checkbox.checked) {
+        label.classList.add('strike-through');
+    } else {
+        label.classList.remove('strike-through');
+    }
+
+    for(let i = 0; i < names.length; i++){
+        if(names[i].name.trim() == label.textContent.trim()){
+            names[i].visited = checkbox.checked
+        }
+    }
+    console.log(names)
+}
