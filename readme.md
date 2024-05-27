@@ -12,3 +12,5 @@ TODO:
 - [x] strikethrough visited neighborhoods in list
 - [x] set up github pages for site
 - [ ] fill in rest of non list and title space with map
+- [ ] add cookies to local storage so that map data saves in broswer
+- [ ] add reset button to clear map to all false

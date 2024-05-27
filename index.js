@@ -162,6 +162,8 @@ function handleMouseDown(e) {
         checkbox.checked = true
     }
     toggleLabelStrikeThrough(checkbox)
+
+    updateNumberOfNeighborhoods()
 }
 
 // Attach event handlers to each GeoJSON feature layer
@@ -246,4 +248,18 @@ function getFeatureByProperty(layer, property, value) {
         }
     });
     return foundFeature;
+}
+
+function updateNumberOfNeighborhoods(){
+
+    let number = 0
+
+    for(let i = 0; i < names.length; i++){
+
+        if(names[i].visited){
+            number++
+        }
+    }
+
+    document.getElementById("title").innerHTML = "Pittsburgh Neighborhoods " + number + "/90"
 }
