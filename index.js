@@ -178,7 +178,7 @@ var names;
 
 function initList(load_from_storage){
 
-    if(load_from_storage){
+    if(load_from_storage && JSON.parse(localStorage.getItem("names"))){
         names = JSON.parse(localStorage.getItem("names") || "[]")
 
         updateNumberOfNeighborhoods()
@@ -200,7 +200,12 @@ function initList(load_from_storage){
                 toggleLabelStrikeThrough(checkbox)
             }
         }
-    }else{
+
+        return;
+    }
+
+    else
+    {
         names = []
 
         //loop through all neighborhoods 
