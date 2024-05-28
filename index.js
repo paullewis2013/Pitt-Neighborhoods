@@ -174,34 +174,68 @@ geojsonLayer.eachLayer(function(layer) {
     });
 });
 
-let names = []
-//loop through all neighborhoods 
-for(let i = 0; i < data.features.length; i++){
-    names.push({
-        name: data.features[i].properties.hood,
-        visited: false
-    })
-}
-names.sort((a, b) => {
-    const nameA = a.name.toUpperCase(); // Convert names to uppercase for case-insensitive sorting
-    const nameB = b.name.toUpperCase();
-    if (nameA < nameB) {
-        return -1; // a should come before b
-    }
-    if (nameA > nameB) {
-        return 1; // b should come before a
-    }
-    return 0; // names are equal, maintain original order
-});
+var names;
 
-let htmlString = ""
-for(let i = 0; i < names.length; i++){
-    htmlString += `<li><label for="myCheckbox${i}">
-    <input type="checkbox" id="myCheckbox${i}" onchange="toggleLabelStrikeThrough(this)">
-    ${names[i].name}
-  </label></li>`
+function initList(load_from_storage){
+
+    if(load_from_storage){
+        names = JSON.parse(localStorage.getItem("names") || "[]")
+
+        updateNumberOfNeighborhoods()
+
+        let htmlString = ""
+        for(let i = 0; i < names.length; i++){
+            htmlString += `<li><label for="myCheckbox${i}">
+            <input type="checkbox" id="myCheckbox${i}" onchange="toggleLabelStrikeThrough(this)">
+            ${names[i].name}
+          </label></li>`
+        }
+        document.getElementById("list").innerHTML = htmlString
+
+        for(let i = 0; i < names.length; i++){
+
+            if(names[i].visited){
+                let checkbox = document.getElementById(`myCheckbox${i}`)
+                checkbox.checked = true
+                toggleLabelStrikeThrough(checkbox)
+            }
+        }
+    }else{
+        names = []
+
+        //loop through all neighborhoods 
+        for(let i = 0; i < data.features.length; i++){
+            names.push({
+                name: data.features[i].properties.hood,
+                visited: false
+            })
+        }
+        names.sort((a, b) => {
+            const nameA = a.name.toUpperCase(); // Convert names to uppercase for case-insensitive sorting
+            const nameB = b.name.toUpperCase();
+            if (nameA < nameB) {
+                return -1; // a should come before b
+            }
+            if (nameA > nameB) {
+                return 1; // b should come before a
+            }
+            return 0; // names are equal, maintain original order
+        });
+        
+        let htmlString = ""
+        for(let i = 0; i < names.length; i++){
+            htmlString += `<li><label for="myCheckbox${i}">
+            <input type="checkbox" id="myCheckbox${i}" onchange="toggleLabelStrikeThrough(this)">
+            ${names[i].name}
+          </label></li>`
+        }
+        document.getElementById("list").innerHTML = htmlString
+    }
 }
-document.getElementById("list").innerHTML = htmlString
+
+initList(true)
+
+
 
 function toggleLabelStrikeThrough(checkbox){
     var label = checkbox.parentNode;
@@ -254,6 +288,7 @@ function updateNumberOfNeighborhoods(){
 
     let number = 0
 
+    // get sum visited number
     for(let i = 0; i < names.length; i++){
 
         if(names[i].visited){
@@ -262,4 +297,19 @@ function updateNumberOfNeighborhoods(){
     }
 
     document.getElementById("title").innerHTML = "Pittsburgh Neighborhoods " + number + "/90"
+
+    localStorage.setItem("names", JSON.stringify(names))
+}
+
+function reset(){
+
+    for(let i = 0; i < names.length; i++)
+    {
+        names[i].visited = false
+        let checkbox = document.getElementById(`myCheckbox${i}`)
+        checkbox.checked = false
+        toggleLabelStrikeThrough(checkbox)
+    }
+
+    updateNumberOfNeighborhoods()
 }
